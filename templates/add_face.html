@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-lg">
+    <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated w-100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <div class="row mb-3">
+                <h3>Стрим</h3>
+                <div class="card p-0">
+                    <div class="video-container card-img-top user-select-none text-lg">
+                        <div class="video_feed"></div>
+                        <div class="video-control text-light">
+                        <div class="text-end">
+                            <i class="px-2 bi bi-save2-fill notif saved-notif text-success"></i>
+
+                            <i class="px-2 bi bi-camera-video video_btn"></i>
+                            <i class="px-2 bi bi-camera screenshot_btn"></i>
+                            <i class="px-2 bi bi-person-check recognition_btn"></i>
+                            <i class="px-2 bi bi-fullscreen fullscreen_btn"></i>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="card-body text-end">
+                        <span class="bi bi-person-square text-danger faces_notfound notif"></span>
+                        <button class="btn btn-warning train">Обучить</button>
+                        <button class="btn btn-success add_face">Добавить лицо</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <select class="form-select users">
+                    {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.id }} - {{ user.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="overflow-auto col-12 col-lg-6">
+            <h3>Фото к добавлению</h3>
+            <div class="row row-cols-3 row-cols-lg-4 g-1 added_faces" data-bs-spy="scroll">
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block postscripts %}
+<script src="/static/js/video.js"></script>
+<script src="/static/js/add_face.js"></script>
+{% endblock %}

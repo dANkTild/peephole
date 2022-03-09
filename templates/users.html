@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-lg">
+    <div class="row">
+        <div class="col-12 col-lg-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Почта</th>
+                        <th scope="col">Фото</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <th scope="row" class="align-middle">{{ u.id }}</th>
+                        <td class="align-middle">{{ u.name }}</td>
+                        <td class="align-middle">{{ u.email }}</td>
+                        <td class="align-middle">
+                            <a href="/user_photo/{{ u.id }}">
+                                <img src="/user_photo/{{ u.id }}" height="150px" alt="">
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12 col-lg-4">
+            <form method="POST" action="" enctype="multipart/form-data">
+                {{ form.csrf_token }}
+                <div class="mb-3">
+                    {{ form.name.label(class_="form-label") }}
+                    {{ form.name(class_="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.email.label(class_="form-label") }}
+                    {{ form.email(class_="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.preview.label(class_="form-label") }}
+                    {{ form.preview(class_="form-control") }}
+                </div>
+                <button type="submit" name="accept_btn" class="btn btn-success float-end">Добавить пользователя</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
