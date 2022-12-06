@@ -6,8 +6,6 @@ from flask import Flask, render_template, send_from_directory, request, redirect
 from flask_socketio import SocketIO
 from werkzeug.utils import secure_filename
 from werkzeug.security import safe_join
-from multiprocessing import Process, Manager
-from multiprocessing.managers import BaseManager
 
 from data.camera import VideoCamera
 from models import db_session
@@ -198,6 +196,6 @@ if __name__ == '__main__':
     frame_gen = VideoCamera(-1)
     frame_gen.start()
 
-    socketio.run(app, host='0.0.0.0', debug=False, use_reloader=False)
+    socketio.run(app, host='0.0.0.0', port=5050, debug=False, use_reloader=False)
     # print("dfsdf")
     # eventlet.sleep(50000)

@@ -7,7 +7,6 @@ import multiprocessing
 
 import ctypes
 import cv2
-from skvideo.io import FFmpegWriter
 from flask_socketio import SocketIO
 import eventlet
 import time
