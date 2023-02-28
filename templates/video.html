@@ -3,16 +3,16 @@
 {% block content %}
 <div class="container-lg">
     <div class="row">
-        <video src="/video_file/{{ video['id'] }}" class="d-block col-12 col-lg-8" controls></video>
+        <video src="/video_file/{{ video.id }}" class="d-block col-12 col-lg-8" controls></video>
         <div class="col-12 col-lg-4">
             <form method="POST" action="">
                 <div class="mb-3">
                     <label for="name" class="form-label">Имя</label>
-                    <input type="text" class="form-control" name="name" id="name" value="{{ video['name'] }}">
+                    <input type="text" class="form-control" name="name" id="name" value="{{ video.name }}">
                 </div>
                 <div class="mb-3">
                     <label for="date" class="form-label">Дата</label>
-                    <input type="text" class="form-control" id="date" value="{{ video['date'] }}" disabled>
+                    <input type="text" class="form-control" id="date" value="{{ video.date }}" disabled>
                 </div>
                 <button type="submit" name="delete_btn" class="btn btn-danger">Удалить</button>
                 <button type="submit" name="accept_btn" class="btn btn-success">Применить</button>

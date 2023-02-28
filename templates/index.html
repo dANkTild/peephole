@@ -1,69 +1,28 @@
 {% extends "base.html" %}
 
+{% block prescripts %}
+<script src="/static/js/client.js"></script>
+{% endblock %}
+
 {% block content %}
 <div class="container-lg">
     <div class="row">
-        {% if not cams %}
-        <div class="col-12 col-lg-6">
-            <h3>Камеры отсутсвуют</h3>
+        <div class="col-12 col-lg-6" id="camera-1">
+            <h3>Камера №1</h3>
+            <div class="card video-container">
+                <video id="video" autoplay="true" muted="muted" playsinline="true" class="video-feed"></video>
+                <div class="video-control text-light text-end">
+                        <span class="px-2 float-start text-warning fps">25</span>
 
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newCam">
-                Добавить камеру
-            </button>
-            <div class="modal fade" id="newCam" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <form method="POST" action="/">
-                                {{ form.csrf_token }}
-                                <div class="mb-3">
-                                    {{ form.device_id.label(class_="form-label") }}
-                                    {{ form.device_id(class_="form-control") }}
-                                </div>
-                                {{ form.errors }}
-                                <button type="submit" name="submit" class="btn btn-success float-end">Добавить</button>
-                            </form>
-                        </div>
-                    </div>
+                        <i class="px-2 bi bi-save2-fill notif saved_notif text-success hide"></i>
+
+                        <i class="px-2 bi bi-camera-video record_btn"></i>
+                        <i class="px-2 bi bi-camera screenshot_btn"></i>
+                        <i class="px-2 bi bi-person-check recognition_btn"></i>
+                        <i class="px-2 bi bi-fullscreen fullscreen_btn"></i>
                 </div>
             </div>
         </div>
-        {% endif %}
-        {% for cam in cams %}
-        <div class="col-12 col-lg-6" id="camera-{{cam.id}}">
-            <h3>Камера №{{ cam.id }}</h3>
-            <h5 class="test-text"></h5>
-            <div class="card">
-                <div class="video-container card-img-top user-select-none">
-                    <div class="video_feed"></div>
-                    <div class="video-control text-light">
-                        <div class="text-end">
-                            <span class="px-2 float-start text-warning fps">25</span>
-
-                            <i class="px-2 bi bi-save2-fill notif saved-notif text-success"></i>
-
-                            <i class="px-2 bi bi-camera-video video_btn"></i>
-                            <i class="px-2 bi bi-camera screenshot_btn"></i>
-                            <i class="px-2 bi bi-person-check recognition_btn"></i>
-                            <i class="px-2 bi bi-fullscreen fullscreen_btn"></i>
-                        </div>
-                    </div>
-                    <div class="position-fixed top-0 end-0 p-3">
-                        <div class="toast align-items-center detected_toast" role="alert" aria-live="assertive" aria-atomic="true">
-                            <div class="toast-header">
-                                <strong class="me-auto detected_name">Bootstrap</strong>
-                                <small class="detected_conf">11 мин. назад</small>
-                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
-                            </div>
-                            <div class="toast-body">
-                                Привет, мир! Это тост-сообщение.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
         <div class="overflow-auto col-12 col-lg-6 screenshots">
             <h3>Сохраненные фото</h3>
             <div class="row row-cols-3 row-cols-lg-4 g-1" data-bs-spy="scroll">
@@ -102,8 +61,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block postscripts %}
-<script src="/static/js/video.js"></script>
 {% endblock %}

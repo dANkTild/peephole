@@ -44,6 +44,9 @@
                     {{ form.preview.label(class_="form-label") }}
                     {{ form.preview(class_="form-control") }}
                 </div>
+                {% if form.errors %}
+                {{ form.errors }}
+                {% endif %}
                 <button type="submit" name="accept_btn" class="btn btn-success float-end">Добавить пользователя</button>
             </form>
         </div>

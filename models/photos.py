@@ -15,6 +15,7 @@ class Photo(SqlAlchemyBase, SerializerMixin):
     date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.now())
 
     def generate(self):
-        self.file = "{}.jpg".format(datetime.now().timestamp())
-        self.name = datetime.now()
-        self.date = datetime.now()
+        now = datetime.now()
+        self.file = "{}.jpg".format(now.timestamp())
+        self.name = now
+        self.date = now

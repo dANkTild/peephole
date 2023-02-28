@@ -1,33 +1,39 @@
-.video-container{
-    height: 30vh;
+.video-container {
+    height: 35vh;
     background-color: #555;
 }
 
-.video_feed{
-    /*background-size: 10em;*/
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 100%;
+.video-feed {
     height: 100%;
 }
 
-.video-control{
+.video-control {
+    z-index: 1;
     background-color: rgba(43, 43, 43, 0.7);
     font-size: 1.45rem;
     height: 2rem;
     margin-top: -2rem;
+    transform-origin: bottom;
+    transition: opacity 300ms, transform 300ms, margin 300ms;
 }
 
-.screenshots{
-    max-height: 30vh;
+.video-control.hide {
+    opacity: 0;
+    transform: scaleY(0);
 }
 
-.notif{
-    display: none;
+.notif {
+    transition: opacity 300ms;
 }
 
+.notif.hide {
+    opacity: 0;
+}
 
-.card-link{
+.screenshots {
+    max-height: 35vh;
+}
+
+.card-link {
     text-decoration: none;
 }

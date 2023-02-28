@@ -1,11 +1,12 @@
-import sqlalchemy as sa
+import asyncio
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 import sqlalchemy.orm as orm
 from sqlalchemy.orm import Session
 import sqlalchemy.ext.declarative as dec
 
 SqlAlchemyBase = dec.declarative_base()
 
-__factory = None
+__factory: AsyncSession = None
 
 
 def global_init(db_file):
@@ -17,17 +18,22 @@ def global_init(db_file):
     if not db_file or not db_file.strip():
         raise Exception("Необходимо указать файл базы данных.")
 
-    conn_str = f'sqlite:///{db_file.strip()}?check_same_thread=False'
+    conn_str = f'sqlite+aiosqlite:///{db_file.strip()}?check_same_thread=False'
     print(f"Подключение к базе данных по адресу {conn_str}")
 
-    engine = sa.create_engine(conn_str, echo=False)
-    __factory = orm.sessionmaker(bind=engine)
+    engine = create_async_engine(conn_str, echo=False)
+    __factory = async_sessionmaker(bind=engine)
 
     from . import __all_models
 
-    SqlAlchemyBase.metadata.create_all(engine)
+    async def init_models():
+        async with engine.begin() as conn:
+            # await conn.run_sync(SqlAlchemyBase.metadata.drop_all)
+            await conn.run_sync(SqlAlchemyBase.metadata.create_all)
+
+    asyncio.run(init_models())
 
 
-def create_session() -> Session:
+def create_session() -> AsyncSession:
     global __factory
     return __factory()

@@ -18,7 +18,8 @@ class Video(SqlAlchemyBase, SerializerMixin):
     date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.now())
 
     def generate(self):
-        self.file = "{}.avi".format(datetime.now().timestamp())
-        self.preview = "{}_preview.jpg".format(datetime.now().timestamp())
-        self.name = datetime.now()
-        self.date = datetime.now()
+        now = datetime.now()
+        self.file = "{}.mp4".format(now.timestamp())
+        self.preview = "{}_preview.jpg".format(now.timestamp())
+        self.name = now
+        self.date = now
