@@ -5,16 +5,20 @@ from aiortc.contrib.media import MediaRecorder, MediaRelay, MediaBlackhole
 from av import VideoFrame
 import asyncio
 
+import numpy
+
 from models import db_session
 from models.users import User
 from models.photos import Photo
 from models.videos import Video
 
+from data import detectors
+
 font = cv2.FONT_HERSHEY_DUPLEX
 
 
 class VideoCamera:
-    def __init__(self, device_id, started=True) -> None:
+    def __init__(self, device_id) -> None:
         super().__init__()
         self.main_stream = VideoStream(self)
         self.media_relay = MediaRelay()
@@ -24,7 +28,8 @@ class VideoCamera:
         self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
         self.cur_frame = None
-        self.is_started = started
+
+        self.is_started = True
 
         self.prev_time = time.time()
         self.counted_frames = 0
@@ -32,12 +37,17 @@ class VideoCamera:
 
         self.recorder = None
 
+        self.detector = detectors.FaceDetector()
+
     def get_stream(self):
         return self.media_relay.subscribe(self.main_stream)
 
     def updater(self):
         while self.is_started:
             ret, img = self.cap.read()
+
+            img = self.detector.tick(img)
+
             self.counted_frames += 1
 
             if self.counted_frames > 10:

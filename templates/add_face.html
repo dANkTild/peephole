@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block prescripts %}
+<script src="/static/js/client.js"></script>
+{% endblock %}
+
 {% block content %}
 <div class="container-lg">
     <div class="modal" tabindex="-1">
@@ -17,22 +21,22 @@
         <div class="col-12 col-lg-6">
             <div class="row mb-3">
                 <h3>Стрим</h3>
-                <div class="card p-0">
-                    <div class="video-container card-img-top user-select-none text-lg">
-                        <div class="video_feed"></div>
-                        <div class="video-control text-light">
-                        <div class="text-end">
-                            <i class="px-2 bi bi-save2-fill notif saved-notif text-success"></i>
+                <div class="card p-0" id="camera-1">
+                    <div class="card video-container">
+                        <video id="video" autoplay="true" muted="muted" playsinline="true" class="video-feed"></video>
+                        <div class="video-control text-light text-end">
+                            <span class="px-2 float-start text-warning fps">25</span>
 
-                            <i class="px-2 bi bi-camera-video video_btn"></i>
+                            <i class="px-2 bi bi-save2-fill notif saved_notif text-success hide"></i>
+
+                            <i class="px-2 bi bi-camera-video record_btn"></i>
                             <i class="px-2 bi bi-camera screenshot_btn"></i>
                             <i class="px-2 bi bi-person-check recognition_btn"></i>
                             <i class="px-2 bi bi-fullscreen fullscreen_btn"></i>
                         </div>
                     </div>
-                    </div>
                     <div class="card-body text-end">
-                        <span class="bi bi-person-square text-danger faces_notfound notif"></span>
+                        <span class="bi bi-person-square text-danger faces_notfound notif hide"></span>
                         <button class="btn btn-warning train">Обучить</button>
                         <button class="btn btn-success add_face">Добавить лицо</button>
                     </div>
@@ -54,9 +58,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block postscripts %}
-<script src="/static/js/video.js"></script>
-<script src="/static/js/add_face.js"></script>
 {% endblock %}

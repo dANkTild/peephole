@@ -1,5 +1,6 @@
 var pc = null;
 var ws = new WebSocket(location.origin.replace("http", 'ws') + "/ws");
+var loading = null;
 
 function negotiate() {
     pc.addTransceiver('video', { direction: 'recvonly' });
@@ -43,6 +44,7 @@ function negotiate() {
 }
 
 function start() {
+    alert("test");
     var config = {
         sdpSemantics: 'unified-plan'
     };
@@ -87,6 +89,26 @@ ws.onmessage = function (event) {
         } else {
             btn.classList.remove("text-primary");
         }
+    } else if (req.trigger == "face_added") {
+        if (req.success) {
+            let img_container = document.createElement("div");
+            img_container.setAttribute("class", "col")
+            img_container.innerHTML = `<div class="card h-100">\n
+                <img src="data:image/png;base64,${req.data}" class="card-img-top" alt="...">
+            </div>`;
+
+            document.querySelector(".added_faces").appendChild(img_container);
+        } else {
+            let notif = document.querySelector(".faces_notfound");
+            notif.classList.remove("hide");
+            setTimeout(function () {
+                notif.classList.add("hide");
+            }, 300);
+        }
+    } else if (req.trigger == "train_started") {
+        loading.show();
+    } else if (req.trigger == "train_finished") {
+        loading.hide();
     }
 };
 
@@ -118,6 +140,18 @@ window.onload = function () {
     document.querySelectorAll(".record_btn").forEach(function (elem) {
         elem.addEventListener("click", function () {
             ws.send(JSON.stringify({ trigger: "record" }))
+        });
+    });
+
+    document.querySelectorAll(".add_face").forEach(function (elem) {
+        elem.addEventListener("click", function () {
+            ws.send(JSON.stringify({ trigger: "add_face" }))
+        });
+    });
+
+    document.querySelectorAll(".train").forEach(function (elem) {
+        elem.addEventListener("click", function () {
+            ws.send(JSON.stringify({ trigger: "train", id: document.querySelector(".users").value}))
         });
     });
 

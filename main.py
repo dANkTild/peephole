@@ -8,9 +8,9 @@ import json
 from quart import Quart, render_template, send_from_directory, request, redirect, websocket
 from werkzeug.utils import secure_filename
 from werkzeug.security import safe_join
+import base64
 
 from aiortc import RTCPeerConnection, RTCSessionDescription
-from aiortc.contrib.media import MediaRelay
 
 from data.camera import VideoCamera
 
@@ -27,7 +27,7 @@ from models.cams_forms import AddCameraForm
 app = Quart(__name__)
 app.config['SECRET_KEY'] = 'secret_key'
 
-camera = VideoCamera(1)
+camera = VideoCamera(0)
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -64,16 +64,9 @@ async def offer_handler():
 @app.route('/add_face')
 async def add_face():
     async with db_session.create_session() as db:
-        for i in range(5):
-            new_user = User(name=f"asd{i}")
-            db.add(new_user)
-        await db.commit()
-
-        return "200"
-    # db = db_session.create_session()
-
-    # all_users = db.query(User).all()
-    # return render_template('add_face.html', title="FRPE - Добавить лица", users=all_users)
+        # all_users = db.query(User).all()
+        all_users = await db.scalars(select(User))
+        return await render_template('add_face.html', title="FRPE - Добавить лица", users=all_users)
 
 
 @app.route('/users', methods=["GET", "POST"])
@@ -122,10 +115,12 @@ async def video_preview(video_id):
 
 
 @app.route('/user_photo/<int:user_id>')
-def user_photo(user_id):
-    db = db_session.create_session()
-    filename = db.query(User).get(user_id).preview
-    return send_from_directory("media/users", filename)
+async def user_photo(user_id):
+    async with db_session.create_session() as db:
+        filename = (await db.get(User, user_id)).preview
+        if filename:
+            return send_from_directory("media/users", filename)
+        return ""
 
 
 @app.route('/photo/<int:photo_id>', methods=["GET", "POST"])
@@ -179,6 +174,18 @@ async def ws():
                 await websocket.send_json({"trigger": "video", "is_recording": res})
                 if not res:
                     await websocket.send_json({"trigger": "saved"})
+            elif data["trigger"] == "add_face":
+                res = await asyncio.to_thread(camera.detector.add_face)
+                if res is not None:
+                    await websocket.send_json({"trigger": "face_added", "success": True, "data": base64.encodebytes(res).decode()})
+                else:
+                    await websocket.send_json({"trigger": "face_added", "success": False})
+            elif data["trigger"] == "train":
+                await websocket.send_json({"trigger": "train_started"})
+                await asyncio.to_thread(camera.detector.train, int(data["id"]))
+                print(int(data["id"]))
+                # await asyncio.sleep(3)
+                await websocket.send_json({"trigger": "train_finished"})
 
         except json.decoder.JSONDecodeError:
             logging.error("Can`t decode JSON")
