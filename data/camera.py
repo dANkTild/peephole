@@ -46,7 +46,7 @@ class VideoCamera:
         while self.is_started:
             ret, img = self.cap.read()
 
-            img = self.detector.tick(img)
+            # img = self.detector.tick(img)
 
             self.counted_frames += 1
 

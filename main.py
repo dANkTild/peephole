@@ -1,6 +1,5 @@
 import quart.flask_patch
 
-import time
 import os
 import logging
 import asyncio
@@ -16,13 +15,11 @@ from data.camera import VideoCamera
 
 from sqlalchemy import select
 from models import db_session
-from models.cameras import Camera
 from models.users import User
 from models.photos import Photo
 from models.videos import Video
 
 from models.user_forms import AddUserForm
-from models.cams_forms import AddCameraForm
 
 app = Quart(__name__)
 app.config['SECRET_KEY'] = 'secret_key'
@@ -64,7 +61,6 @@ async def offer_handler():
 @app.route('/add_face')
 async def add_face():
     async with db_session.create_session() as db:
-        # all_users = db.query(User).all()
         all_users = await db.scalars(select(User))
         return await render_template('add_face.html', title="FRPE - Добавить лица", users=all_users)
 
@@ -238,4 +234,4 @@ async def inter():
 if __name__ == '__main__':
     db_session.global_init("database/data.db")
 
-    app.run("0.0.0.0", port=5555, use_reloader=False)
+    app.run("0.0.0.0", use_reloader=False)
