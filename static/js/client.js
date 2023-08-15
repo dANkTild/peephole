@@ -44,7 +44,6 @@ function negotiate() {
 }
 
 function start() {
-    alert("test");
     var config = {
         sdpSemantics: 'unified-plan'
     };
